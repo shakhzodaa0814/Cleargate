@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1F6F8B">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ClearGate">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>ClearGate – Patient Portal Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#E8F1F2;--card:#fff;--ink:#12263A;--sub:#4C6272;--brand:#1F6F8B;--brandtxt:#fff;--line:#CFE0E3;--ok:#2E7D5B;--warn:#B26A00;--warnbg:#FFF3DC;--bad:#B3361F;--badbg:#FDE7E2;--okbg:#E2F4EB;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0E1C26;--card:#162B38;--ink:#E7F1F4;--sub:#9DB5C1;--brand:#5BB5D0;--brandtxt:#08202B;--line:#25414F;--ok:#6FD1A2;--warn:#F0B454;--warnbg:#3A2D10;--bad:#FF8F7A;--badbg:#3E1B14;--okbg:#12352A}}
+:root[data-theme="dark"]{--bg:#0E1C26;--card:#162B38;--ink:#E7F1F4;--sub:#9DB5C1;--brand:#5BB5D0;--brandtxt:#08202B;--line:#25414F;--ok:#6FD1A2;--warn:#F0B454;--warnbg:#3A2D10;--bad:#FF8F7A;--badbg:#3E1B14;--okbg:#12352A}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",Verdana,sans-serif;font-size:17px;line-height:1.45}
+#app{max-width:440px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--brand);color:var(--brandtxt);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+header b{font-size:19px}
+select,button,input,textarea{font:inherit;color:inherit}
+select{background:transparent;color:var(--brandtxt);border:1px solid currentColor;border-radius:8px;padding:4px 6px}
+select option{color:#000}
+main{flex:1;padding:16px;padding-bottom:96px}
+h2{font-size:22px;margin:4px 0 12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 8px;text-align:center;cursor:pointer;min-height:104px;font-weight:700}
+.tile span{display:block;font-size:32px}
+.tile:hover{border-color:var(--brand)}
+button{cursor:pointer}
+button:focus-visible,.tile:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid var(--warn);outline-offset:2px}
+.btn{background:var(--brand);color:var(--brandtxt);border:0;border-radius:10px;padding:12px 18px;font-weight:700;min-height:48px;width:100%}
+.btn.ghost{background:transparent;color:var(--brand);border:2px solid var(--brand)}
+.pill{display:inline-block;border-radius:99px;padding:2px 10px;font-size:14px;font-weight:700}
+.ok{background:var(--okbg);color:var(--ok)}.warn{background:var(--warnbg);color:var(--warn)}.bad{background:var(--badbg);color:var(--bad)}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.sub{color:var(--sub);font-size:15px}
+nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:440px;background:var(--card);border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom,0px)}
+nav button{flex:1;background:none;border:0;padding:8px 2px;font-size:13px;color:var(--sub);min-height:56px}
+nav button[aria-current="page"]{color:var(--brand);font-weight:700}
+nav button span{display:block;font-size:22px}
+input,textarea{width:100%;border:2px solid var(--line);background:var(--card);border-radius:10px;padding:12px;margin:6px 0 10px}
+.err{color:var(--bad);font-weight:700;font-size:15px;margin:-4px 0 10px}
+.alert{border-left:6px solid var(--warn);background:var(--warnbg)}
+.alert.bad{border-color:var(--bad);background:var(--badbg)}
+.bar{height:10px;border-radius:6px;background:var(--line);position:relative;margin:10px 0}
+.bar i{position:absolute;top:-3px;width:6px;height:16px;border-radius:3px;background:var(--ink)}
+.toast{position:fixed;left:50%;bottom:80px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;z-index:9}
+.msg{padding:10px 12px;border-radius:12px;margin:6px 0;max-width:85%}
+.msg.me{background:var(--brand);color:var(--brandtxt);margin-left:auto}
+.msg.dr{background:var(--card);border:1px solid var(--line)}
+@media (prefers-reduced-motion:no-preference){main>*{animation:f .2s}@keyframes f{from{opacity:.4}}}
+</style>
+</head>
+<body>
+<div id="app"><header><b>ClearGate</b><select id="lang" aria-label="Language"><option value="en">English</option><option value="ru">Русский</option><option value="kk">Қазақша</option></select></header><main id="main"></main><nav id="nav" hidden></nav></div>
+<script>
+const T={
+en:{hi:"Welcome, Aigerim",visits:"Visits",msgs:"Messages",res:"Test results",meds:"Medications",priv:"Privacy",home:"Home",login:"Sign in",code:"6-digit code sent to your phone",results:"Test results",explain:"In plain words",call:"Call your clinic today",send:"Send message",take:"Mark as taken",noshow:"You have no upcoming visits.",book:"Book a visit"},
+ru:{hi:"Здравствуйте, Айгерим",visits:"Визиты",msgs:"Сообщения",res:"Анализы",meds:"Лекарства",priv:"Конфиденциальность",home:"Главная",login:"Войти",code:"6-значный код отправлен на телефон",results:"Результаты анализов",explain:"Простыми словами",call:"Позвоните в клинику сегодня",send:"Отправить",take:"Отметить приём",noshow:"Нет предстоящих визитов.",book:"Записаться"},
+kk:{hi:"Сәлеметсіз бе, Айгерім",visits:"Қабылдаулар",msgs:"Хабарламалар",res:"Талдаулар",meds:"Дәрілер",priv:"Құпиялылық",home:"Басты",login:"Кіру",code:"Телефонға 6 таңбалы код жіберілді",results:"Талдау нәтижелері",explain:"Қарапайым тілде",call:"Бүгін емханаға қоңырау шалыңыз",send:"Жіберу",take:"Қабылданды",noshow:"Алдағы қабылдау жоқ.",book:"Жазылу"}};
+let L="en",view="login",sel=null,authed=false,timer;
+const t=k=>T[L][k]||T.en[k];
+const labs=[
+{id:0,n:"Potassium",v:5.6,u:"mmol/L",lo:3.5,hi:5.0,max:7,st:"bad",d:"May 20",x:"Potassium helps your heart and muscles work. Yours is higher than the healthy range. High potassium can affect heart rhythm, so it should be checked again soon.",a:"Call your clinic today. Do not wait for your next visit."},
+{id:1,n:"HbA1c",v:7.4,u:"%",lo:4,hi:5.7,max:10,st:"warn",d:"May 20",x:"HbA1c shows your average blood sugar over about 3 months. Under 5.7% is typical. Yours is above the usual target for people with diabetes (about 7%).",a:"Mention it at your next visit. Keep taking your medicines."},
+{id:2,n:"LDL cholesterol",v:3.1,u:"mmol/L",lo:0,hi:3.0,max:5,st:"warn",d:"May 20",x:"LDL is the “bad” cholesterol that can build up in blood vessels. Yours is slightly high.",a:"Ask your doctor about food and exercise changes."},
+{id:3,n:"Hemoglobin",v:13.8,u:"g/dL",lo:12,hi:16,max:20,st:"ok",d:"May 20",x:"Hemoglobin carries oxygen in your blood. Your level is in the healthy range.",a:"No action needed."}];
+const meds=[{n:"Metformin 500 mg",w:"With breakfast and dinner",done:false},{n:"Atorvastatin 20 mg",w:"Evening",done:false},{n:"Vitamin D 1000 IU",w:"Morning",done:true}];
+const thread=[{f:"dr",t:"Hello Aigerim, your May results are ready. Please read the notes."}];
+const stLabel={ok:"Normal",warn:"Check",bad:"Act now"};
+const $=s=>document.querySelector(s);
+function toast(m){const e=document.createElement("div");e.className="toast";e.setAttribute("role","status");e.textContent=m;document.body.appendChild(e);setTimeout(()=>e.remove(),2200)}
+function go(v,s){view=v;sel=s;render();window.scrollTo(0,0);reset()}
+function reset(){clearTimeout(timer);if(authed)timer=setTimeout(()=>{authed=false;view="login";render();toast("Signed out after 5 minutes of inactivity")},300000)}
+function nav(){const n=$("#nav");n.hidden=!authed;if(!authed)return;
+const it=[["home","🏠",t("home")],["results","🧪",t("res")],["meds","💊",t("meds")],["msgs","✉️",t("msgs")],["priv","🔒",t("priv")]];
+n.innerHTML=it.map(i=>`<button data-v="${i[0]}" ${view===i[0]?'aria-current="page"':""}><span aria-hidden="true">${i[1]}</span>${i[2]}</button>`).join("");
+n.querySelectorAll("button").forEach(b=>b.onclick=()=>go(b.dataset.v))}
+function render(){const m=$("#main");nav();
+if(view==="login"){m.innerHTML=`<h2>${t("login")}</h2><div class="card"><label for="u">Patient ID</label><input id="u" value="KZ-204815" autocomplete="username"><label for="c">${t("code")}</label><input id="c" inputmode="numeric" maxlength="6" placeholder="123456"><div id="e" class="err" role="alert"></div><button class="btn" id="go">${t("login")}</button><p class="sub">Demo: any 6 digits works. Wrong length shows an error.</p></div>`;
+$("#go").onclick=()=>{const c=$("#c").value;if(!/^\d{6}$/.test(c)){$("#e").textContent="Enter all 6 digits of the code we sent to your phone.";return}authed=true;go("home")}}
+else if(view==="home"){const urgent=labs.filter(l=>l.st==="bad").length;
+m.innerHTML=`<h2>${t("hi")}</h2>${urgent?`<div class="card alert bad"><b>⚠️ 1 result needs action</b><p>${t("call")}.</p><button class="btn" id="seeu">${t("res")}</button></div>`:""}
+<div class="grid"><button class="tile" data-g="results"><span>🧪</span>${t("res")}</button><button class="tile" data-g="msgs"><span>✉️</span>${t("msgs")}</button><button class="tile" data-g="meds"><span>💊</span>${t("meds")}</button><button class="tile" data-g="visits"><span>📅</span>${t("visits")}</button></div>`;
+m.querySelectorAll("[data-g]").forEach(b=>b.onclick=()=>go(b.dataset.g));if(urgent)$("#seeu").onclick=()=>go("detail",0)}
+else if(view==="results"){m.innerHTML=`<h2>${t("results")}</h2>`+labs.map(l=>`<button class="card row" style="width:100%;text-align:left" data-i="${l.id}"><span><b>${l.n}</b><br><span class="sub">${l.v} ${l.u} · ${l.d}</span></span><span class="pill ${l.st}">${stLabel[l.st]}</span></button>`).join("")+`<p class="sub">Explanations are AI-drafted and reviewed by your care team. They do not replace medical advice.</p>`;
+m.querySelectorAll("[data-i]").forEach(b=>b.onclick=()=>go("detail",+b.dataset.i))}
+else if(view==="detail"){const l=labs[sel],p=x=>Math.min(100,x/l.max*100);
+m.innerHTML=`<button class="btn ghost" id="bk" style="width:auto">← Back</button><h2>${l.n}</h2><div class="card"><div class="row"><b style="font-size:28px">${l.v} <small>${l.u}</small></b><span class="pill ${l.st}">${stLabel[l.st]}</span></div>
+<div class="bar" aria-hidden="true"><div style="position:absolute;left:${p(l.lo)}%;width:${p(l.hi)-p(l.lo)}%;height:10px;background:var(--ok);opacity:.4;border-radius:6px"></div><i style="left:${p(l.v)}%"></i></div><span class="sub">Healthy range: ${l.lo}–${l.hi} ${l.u}</span></div>
+<div class="card"><b>${t("explain")}</b><p>${l.x}</p></div><div class="card ${l.st==="ok"?"":"alert"+(l.st==="bad"?" bad":"")}"><b>What to do</b><p>${l.a}</p>${l.st!=="ok"?'<button class="btn" id="ask">Message my doctor</button>':""}</div>`;
+$("#bk").onclick=()=>go("results");const a=$("#ask");if(a)a.onclick=()=>go("msgs")}
+else if(view==="meds"){m.innerHTML=`<h2>${t("meds")}</h2>`+meds.map((d,i)=>`<div class="card row"><span><b>${d.n}</b><br><span class="sub">${d.w}</span></span>${d.done?'<span class="pill ok">Taken ✓</span>':`<button class="btn" style="width:auto" data-m="${i}">${t("take")}</button>`}</div>`).join("")+`<p class="sub">Reminders can be sent by push or SMS. Interaction checks use a national drug database.</p>`;
+m.querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{meds[b.dataset.m].done=true;toast("Saved");render()})}
+else if(view==="msgs"){m.innerHTML=`<h2>${t("msgs")}</h2><div class="card">${thread.map(x=>`<div class="msg ${x.f}">${x.t}</div>`).join("")}</div><label for="mt">Your message</label><textarea id="mt" rows="3" placeholder="Describe your question or symptoms"></textarea><div id="e" class="err" role="alert"></div><button class="btn" id="sd">${t("send")}</button><p class="sub">Chest pain, trouble breathing or severe symptoms: call 103 now. Messages are not for emergencies.</p>`;
+$("#sd").onclick=()=>{const v=$("#mt").value.trim();if(!v){$("#e").textContent="Write a message before sending.";return}
+if(!navigator.onLine){$("#e").textContent="You are offline. Your message is saved and will send when you reconnect.";return}
+thread.push({f:"me",t:v});thread.push({f:"dr",t:"Thank you. Our nurse will reply within 1 working day."});toast("Message sent");render()}}
+else if(view==="visits"){m.innerHTML=`<h2>${t("visits")}</h2><div class="card"><b>${t("noshow")}</b></div><div class="card"><b>Past</b><p>Clinic visit · May 20<br><span class="sub">After-visit summary available</span></p></div><button class="btn">${t("book")}</button>`}
+else if(view==="priv"){m.innerHTML=`<h2>${t("priv")}</h2><div class="card"><b>How your data is protected</b><ul><li>Two-step sign-in (ID + phone code)</li><li>Encrypted in transit (TLS) and at rest (AES-256)</li><li>Role-based access: only your care team sees your record</li><li>Every access is logged and visible to you</li><li>Auto sign-out after 5 minutes</li></ul></div><div class="card"><b>Your choices</b><p><label><input type="checkbox" checked style="width:auto;margin:0 8px 0 0">Allow AI plain-language explanations</label></p><p><label><input type="checkbox" style="width:auto;margin:0 8px 0 0">Share data for research (anonymised)</label></p><p class="sub">Designed to follow GDPR principles and HIPAA safeguards. Demo uses fictional data only.</p></div><button class="btn ghost" id="lo">Sign out</button>`;
+$("#lo").onclick=()=>{authed=false;go("login")}}}
+$("#lang").onchange=e=>{L=e.target.value;document.documentElement.lang=L;render()};
+document.addEventListener("click",reset);
+render();
+if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script>
+</body>
+</html>
